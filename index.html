@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pendataan Barang v6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-gray-800">Manajemen Barang</h1>
+            <p class="text-gray-600">Gunakan Tombol "Enter" Untuk Input Lebih Cepat</p>
+        </header>
+
+        <!-- Form Input Utama -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" id="namaBarang" placeholder="Nama Barang" class="p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="number" id="jumlahBarang" placeholder="Jumlah" class="p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                <button onclick="tambahBarang()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition">
+                    Tambah Barang
+                </button>
+            </div>
+        </div>
+
+        <!-- Toolbar Aksi Massal -->
+        <div id="bulkActions" class="bg-blue-50 p-4 rounded-lg mb-4 flex justify-between items-center hidden border border-blue-100">
+            <span id="selectedCount" class="text-blue-700 font-medium text-sm">0 Item Terpilih</span>
+            <div class="flex gap-2">
+                <button onclick="eksporTerpilih()" class="bg-green-600 hover:bg-green-700 text-white py-1 px-4 rounded text-sm transition">Ekspor Terpilih</button>
+                <button onclick="hapusTerpilih()" class="bg-red-600 hover:bg-red-700 text-white py-1 px-4 rounded text-sm transition">Hapus Terpilih</button>
+            </div>
+        </div>
+
+        <!-- Tabel Data -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-50 border-b">
+                    <tr>
+                        <th class="p-4 w-10 text-center">
+                            <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" class="w-4 h-4 rounded">
+                        </th>
+                        <th class="p-4 font-semibold text-gray-700">Nama Barang</th>
+                        <th class="p-4 font-semibold text-gray-700">Jumlah</th>
+                        <th class="p-4 font-semibold text-gray-700 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Tombol Ekspor Semua (Tetap Ada) -->
+        <div class="mt-4 flex justify-end">
+            <button onclick="eksporExcel(daftarBarang)" class="text-gray-600 hover:text-green-600 text-sm flex items-center gap-2">
+                <span>Ekspor Semua Data</span>
+            </button>
+        </div>
+
+        <!-- Info Developer -->
+        <div class="mt-12 border-t pt-8 text-center">
+            <button onclick="toggleDevInfo()" class="text-gray-500 hover:text-blue-600 text-sm font-medium transition">
+                Info Developer 
+            </button>
+            <div id="devInfo" class="hidden mt-6 bg-white p-6 rounded-xl shadow-inner border border-gray-100">
+                <div class="flex flex-col items-center">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                        <span class="text-2xl font-bold text-blue-600">Dev</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800">Divo X Vibe Coding</h3>
+                    <p class="text-sm text-gray-500">Full-stack Developer & Photographer</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit -->
+    <div id="modalEdit" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+            <h2 class="text-xl font-bold mb-4">Edit Data Barang</h2>
+            <input type="hidden" id="editIndex">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1">Nama Barang</label>
+                    <input type="text" id="editNama" class="w-full p-2 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600 mb-1">Jumlah</label>
+                    <input type="number" id="editJumlah" class="w-full p-2 border border-gray-300 rounded outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button onclick="tutupModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Batal</button>
+                    <button onclick="updateBarang()" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
